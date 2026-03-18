@@ -476,16 +476,7 @@ let roomRef = null;
 let useFirebase = false;
 
 // Paste your Firebase config here ↓
-const firebaseConfig = {
-  apiKey: "AIzaSyAqQBhS-clJxMJC82NBBDsdjPHVcgCzFVs",
-  authDomain: "ve-auction.firebaseapp.com",
-  databaseURL: "https://ve-auction-default-rtdb.firebaseio.com",
-  projectId: "ve-auction",
-  storageBucket: "ve-auction.firebasestorage.app",
-  messagingSenderId: "584030263737",
-  appId: "1:584030263737:web:53464cdd34fd56d9a53e68",
-  measurementId: "G-HF2ZB2E4GE"
-};
+
 
 function initFirebase() {
   if (FB_CONFIG.databaseURL && !FB_CONFIG.databaseURL.includes('PASTE_')) {
