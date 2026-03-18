@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>VE AUCTION</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #0d0a1a;
+  --bg2: #130f24;
+  --card: #1e1535;
+  --card2: #251a3e;
+  --purple: #c084fc;
+  --purple2: #a855f7;
+  --pink: #f472b6;
+  --gold: #fbbf24;
+  --green: #4ade80;
+  --red: #f87171;
+  --blue: #60a5fa;
+  --border: rgba(192,132,252,0.18);
+  --text: #ede9f6;
+  --muted: #8b7daa;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;min-height:100vh;overflow-x:hidden;}
+
+/* HEADER */
+header{
+  background:rgba(13,10,26,0.95);border-bottom:1px solid var(--border);
+  padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+}
+.logo{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:900;letter-spacing:3px;}
+.logo span{color:var(--purple);}
+.nav-tabs{display:flex;gap:4px;}
+.nav-tab{
+  background:transparent;border:none;color:var(--muted);
+  padding:7px 16px;border-radius:8px;font-family:'Rajdhani',sans-serif;
+  font-size:15px;font-weight:600;cursor:pointer;transition:all 0.2s;letter-spacing:0.5px;
+}
+.nav-tab:hover{color:var(--text);background:rgba(255,255,255,0.05);}
+.nav-tab.active{color:var(--purple);background:rgba(192,132,252,0.1);}
+
+/* PAGES */
+.page{display:none;padding:24px;}
+.page.active{display:block;}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;}
+.card-title{font-family:'Orbitron',sans-serif;font-size:14px;font-weight:700;color:var(--purple);letter-spacing:1px;margin-bottom:16px;}
+
+/* INPUTS */
+input,select{
+  background:rgba(255,255,255,0.06);border:1px solid rgba(192,132,252,0.2);
+  color:var(--text);padding:10px 14px;border-radius:10px;font-family:'Rajdhani',sans-serif;
+  font-size:15px;font-weight:500;outline:none;transition:border-color 0.2s;width:100%;
+}
+input:focus,select:focus{border-color:var(--purple);}
+input::placeholder{color:var(--muted);}
+select option{background:#1e1535;}
+
+/* BUTTONS */
+.btn{
+  border:none;padding:10px 20px;border-radius:10px;font-family:'Rajdhani',sans-serif;
+  font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;letter-spacing:0.5px;
+}
+.btn:active{transform:scale(0.97);}
+.btn-purple{background:var(--purple);color:#0d0a1a;}
+.btn-purple:hover{background:var(--purple2);}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text);}
+.btn-outline:hover{border-color:var(--purple);color:var(--purple);}
+.btn-green{background:var(--green);color:#0d0a1a;}
+.btn-green:hover{background:#22c55e;}
+.btn-red{background:var(--red);color:#0d0a1a;}
+.btn-red:hover{background:#ef4444;}
+.btn-gold{background:var(--gold);color:#0d0a1a;}
+.btn-gold:hover{background:#f59e0b;}
+.btn-sm{padding:6px 14px;font-size:13px;}
+.btn-full{width:100%;}
+
+/* GRID */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+
+/* ============ SETUP PAGE ============ */
+.section-label{font-size:13px;color:var(--muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;}
+.input-row{display:flex;gap:10px;align-items:center;}
+.player-list{display:flex;flex-direction:column;gap:8px;margin-top:12px;max-height:280px;overflow-y:auto;}
+.player-item{
+  display:flex;align-items:center;gap:10px;
+  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);
+  border-radius:10px;padding:10px 14px;
+}
+.player-item .pi-name{flex:1;font-size:15px;font-weight:600;}
+.pi-badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;letter-spacing:0.5px;}
+.badge-captain{background:rgba(251,191,36,0.15);color:var(--gold);}
+.badge-player{background:rgba(192,132,252,0.1);color:var(--purple);}
+.badge-sold{background:rgba(74,222,128,0.12);color:var(--green);}
+.badge-unsold{background:rgba(248,113,113,0.12);color:var(--red);}
+
+/* ============ TEAMS PAGE ============ */
+.teams-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;}
+.team-card{
+  background:var(--card);border:2px solid var(--border);
+  border-radius:16px;padding:18px;transition:border-color 0.2s;
+}
+.team-card.selected{border-color:var(--purple);}
+.team-name-display{font-family:'Orbitron',sans-serif;font-size:16px;font-weight:700;margin-bottom:4px;}
+.team-points{font-size:13px;color:var(--muted);}
+.team-points span{color:var(--gold);font-weight:700;font-size:16px;}
+.team-players-list{margin-top:12px;display:flex;flex-direction:column;gap:6px;}
+.tp-row{display:flex;align-items:center;gap:8px;font-size:14px;}
+.tp-icon{width:8px;height:8px;border-radius:50%;background:var(--purple);flex-shrink:0;}
+.tp-icon.captain{background:var(--gold);}
+
+/* ============ AUCTION PAGE ============ */
+.auction-stage{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:20px;padding:28px;text-align:center;margin-bottom:20px;
+}
+.auction-player-name{font-family:'Orbitron',sans-serif;font-size:32px;font-weight:900;margin-bottom:4px;}
+.auction-player-role{font-size:16px;color:var(--muted);margin-bottom:20px;}
+.current-bid-label{font-size:13px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
+.current-bid-val{font-family:'Orbitron',sans-serif;font-size:48px;font-weight:900;color:var(--gold);line-height:1.1;}
+.current-bid-unit{font-size:18px;color:var(--muted);margin-bottom:16px;}
+.bidding-team{font-size:15px;color:var(--purple);font-weight:600;}
+
+.bid-controls{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+.team-bid-btn{
+  background:var(--card2);border:2px solid var(--border);
+  border-radius:12px;padding:14px;cursor:pointer;transition:all 0.2s;
+  font-family:'Rajdhani',sans-serif;
+}
+.team-bid-btn:hover{border-color:var(--purple);background:rgba(192,132,252,0.08);}
+.team-bid-btn.leading{border-color:var(--gold);background:rgba(251,191,36,0.08);}
+.tbb-name{font-size:14px;font-weight:700;margin-bottom:4px;}
+.tbb-pts{font-size:12px;color:var(--muted);}
+.tbb-pts span{color:var(--gold);font-weight:700;}
+.tbb-bid{font-family:'Orbitron',sans-serif;font-size:16px;font-weight:700;color:var(--purple);}
+
+.bid-step-row{display:flex;gap:8px;align-items:center;margin-bottom:12px;}
+.bid-step-btn{flex:1;padding:8px;background:rgba(192,132,252,0.08);border:1px solid rgba(192,132,252,0.2);color:var(--purple);border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s;}
+.bid-step-btn:hover{background:rgba(192,132,252,0.18);}
+.bid-step-btn.active-step{background:rgba(192,132,252,0.25);border-color:var(--purple);}
+
+.sold-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.85);
+  display:flex;align-items:center;justify-content:center;
+  z-index:500;opacity:0;pointer-events:none;transition:opacity 0.3s;
+}
+.sold-overlay.show{opacity:1;pointer-events:all;}
+.sold-box{
+  background:var(--card);border:2px solid var(--gold);border-radius:24px;
+  padding:40px;text-align:center;max-width:380px;width:90%;
+  animation:popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes popIn{from{transform:scale(0.7);opacity:0}to{transform:scale(1);opacity:1}}
+.sold-title{font-family:'Orbitron',sans-serif;font-size:36px;font-weight:900;color:var(--gold);margin-bottom:8px;}
+.sold-player{font-size:22px;font-weight:700;margin-bottom:4px;}
+.sold-team{font-size:16px;color:var(--purple);margin-bottom:8px;}
+.sold-pts{font-family:'Orbitron',sans-serif;font-size:28px;color:var(--gold);}
+
+/* ============ COIN TOSS ============ */
+.coin-section{display:flex;flex-direction:column;align-items:center;gap:24px;padding:20px 0;}
+.coin-wrapper{perspective:600px;}
+.coin{
+  width:140px;height:140px;border-radius:50%;position:relative;
+  transform-style:preserve-3d;transition:transform 1.2s cubic-bezier(0.45,0.05,0.55,0.95);
+  cursor:pointer;
+}
+.coin.flipping{animation:coinFlip 1.4s ease forwards;}
+@keyframes coinFlip{
+  0%{transform:rotateY(0);}
+  100%{transform:rotateY(1800deg);}
+}
+.coin.heads-result{transform:rotateY(1800deg);}
+.coin.tails-result{transform:rotateY(1980deg);}
+.coin-face{
+  position:absolute;inset:0;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  backface-visibility:hidden;font-family:'Orbitron',sans-serif;
+  font-size:28px;font-weight:900;border:4px solid;
+}
+.coin-heads{
+  background:radial-gradient(circle at 35% 35%, #fde68a, #f59e0b, #92400e);
+  border-color:#f59e0b;color:#78350f;
+}
+.coin-tails{
+  background:radial-gradient(circle at 35% 35%, #e2e8f0, #94a3b8, #334155);
+  border-color:#94a3b8;color:#1e293b;
+  transform:rotateY(180deg);
+}
+.coin-result{font-family:'Orbitron',sans-serif;font-size:22px;font-weight:900;min-height:36px;text-align:center;}
+.coin-result.heads{color:var(--gold);}
+.coin-result.tails{color:#94a3b8;}
+.toss-teams{display:flex;gap:16px;width:100%;max-width:400px;}
+.toss-team-btn{
+  flex:1;padding:14px;border-radius:12px;border:2px solid var(--border);
+  background:var(--card2);font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;
+  cursor:pointer;transition:all 0.2s;color:var(--text);text-align:center;
+}
+.toss-team-btn:hover{border-color:var(--purple);}
+.toss-team-btn.chosen{border-color:var(--gold);background:rgba(251,191,36,0.1);color:var(--gold);}
+.toss-history{width:100%;max-width:400px;}
+.toss-hist-item{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:rgba(255,255,255,0.03);border-radius:8px;margin-bottom:6px;font-size:14px;}
+
+/* ============ SPIN WHEEL ============ */
+.wheel-section{display:flex;flex-direction:column;align-items:center;gap:20px;padding:16px 0;}
+.wheel-container{position:relative;width:320px;height:320px;}
+.wheel-pointer{
+  position:absolute;top:-18px;left:50%;transform:translateX(-50%);
+  width:0;height:0;
+  border-left:14px solid transparent;border-right:14px solid transparent;
+  border-top:28px solid var(--purple);z-index:10;
+  filter:drop-shadow(0 2px 6px rgba(192,132,252,0.6));
+}
+#wheelCanvas{border-radius:50%;box-shadow:0 0 40px rgba(192,132,252,0.25);}
+.spin-btn{
+  background:linear-gradient(135deg,var(--purple),var(--pink));
+  border:none;color:#0d0a1a;padding:14px 48px;border-radius:50px;
+  font-family:'Orbitron',sans-serif;font-size:16px;font-weight:900;
+  cursor:pointer;letter-spacing:1px;transition:all 0.2s;
+}
+.spin-btn:hover{transform:translateY(-2px);filter:brightness(1.1);}
+.spin-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+.wheel-result{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:700;color:var(--gold);min-height:32px;text-align:center;}
+
+/* TOAST */
+#toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--card);border:1px solid rgba(192,132,252,0.3);
+  padding:12px 24px;border-radius:12px;font-size:15px;font-weight:600;
+  z-index:999;transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  white-space:nowrap;pointer-events:none;
+}
+#toast.show{transform:translateX(-50%) translateY(0);}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(192,132,252,0.2);border-radius:2px;}
+
+/* DIVIDER */
+.divider{border:none;border-top:1px solid var(--border);margin:16px 0;}
+
+/* EMPTY STATE */
+.empty{text-align:center;padding:32px;color:var(--muted);font-size:15px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">VE <span>AUCTION</span></div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="goTo('setup')">⚙️ Setup</button>
+    <button class="nav-tab" onclick="goTo('teams')">🛡️ Teams</button>
+    <button class="nav-tab" onclick="goTo('auction')">⚡ Auction</button>
+    <button class="nav-tab" onclick="goTo('cointoss')">🪙 Coin Toss</button>
+    <button class="nav-tab" onclick="goTo('wheel')">🎡 Spin Wheel</button>
+  </div>
+</header>
+
+<!-- SOLD OVERLAY -->
+<div class="sold-overlay" id="soldOverlay">
+  <div class="sold-box">
+    <div class="sold-title">SOLD!</div>
+    <div class="sold-player" id="soldPlayerName"></div>
+    <div style="font-size:14px;color:var(--muted);margin-bottom:8px;">goes to</div>
+    <div class="sold-team" id="soldTeamName"></div>
+    <div class="sold-pts" id="soldPoints"></div>
+    <div style="font-size:13px;color:var(--muted);margin-top:4px;">points spent</div>
+    <button class="btn btn-purple" style="margin-top:20px;width:100%;" onclick="closeSold()">Next Player →</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<!-- ===== SETUP PAGE ===== -->
+<div class="page active" id="page-setup">
+  <div style="max-width:800px;margin:0 auto;display:flex;flex-direction:column;gap:20px;">
+
+    <!-- ADD TEAMS -->
+    <div class="card">
+      <div class="card-title">🛡️ STEP 1 — Create Teams</div>
+      <div class="input-row" style="margin-bottom:12px;">
+        <input id="teamNameInput" placeholder="Team name (e.g. Team A)" maxlength="20"/>
+        <input id="teamPointsInput" type="number" placeholder="Starting points" value="1000" style="max-width:160px;"/>
+        <button class="btn btn-purple" onclick="addTeam()" style="white-space:nowrap;">+ Add Team</button>
+      </div>
+      <div id="teamListSetup">
+        <div class="empty">No teams yet. Add your first team above!</div>
+      </div>
+    </div>
+
+    <!-- ADD PLAYERS -->
+    <div class="card">
+      <div class="card-title">👤 STEP 2 — Add Players</div>
+      <div class="input-row" style="margin-bottom:8px;">
+        <input id="playerNameInput" placeholder="Player name" maxlength="30"/>
+        <select id="playerRoleInput" style="max-width:160px;">
+          <option value="Player">Player</option>
+          <option value="Captain">Captain ⭐</option>
+        </select>
+        <button class="btn btn-purple" onclick="addPlayer()" style="white-space:nowrap;">+ Add Player</button>
+      </div>
+      <div id="playerList">
+        <div class="empty">No players yet. Add players to auction!</div>
+      </div>
+    </div>
+
+    <!-- START AUCTION -->
+    <div class="card" style="text-align:center;">
+      <div class="card-title">🚀 STEP 3 — Start Auction</div>
+      <p style="color:var(--muted);font-size:15px;margin-bottom:16px;">Make sure you've added teams and players before starting.</p>
+      <button class="btn btn-green" style="padding:14px 48px;font-size:17px;" onclick="startAuction()">⚡ Start Auction</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== TEAMS PAGE ===== -->
+<div class="page" id="page-teams">
+  <div style="max-width:900px;margin:0 auto;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <h2 style="font-family:'Orbitron',sans-serif;font-size:18px;">Team Overview</h2>
+      <button class="btn btn-outline btn-sm" onclick="resetAuction()">🔄 Reset All</button>
+    </div>
+    <div class="teams-grid" id="teamsGrid">
+      <div class="empty">No teams created yet. Go to Setup first!</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== AUCTION PAGE ===== -->
+<div class="page" id="page-auction">
+  <div style="max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:16px;">
+
+    <!-- CURRENT PLAYER ON STAGE -->
+    <div class="auction-stage" id="auctionStage">
+      <div style="font-size:13px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:16px;">Now On Auction</div>
+      <div class="auction-player-name" id="auctionPlayerName">—</div>
+      <div class="auction-player-role" id="auctionPlayerRole">—</div>
+      <div class="current-bid-label">Current Bid</div>
+      <div class="current-bid-val" id="currentBidVal">0</div>
+      <div class="current-bid-unit">points</div>
+      <div class="bidding-team" id="biddingTeam">No bids yet</div>
+    </div>
+
+    <!-- BID STEP -->
+    <div class="card">
+      <div class="card-title">💰 BID AMOUNT (per click)</div>
+      <div class="bid-step-row" id="bidStepRow">
+        <button class="bid-step-btn active-step" onclick="setBidStep(10,this)">+10</button>
+        <button class="bid-step-btn" onclick="setBidStep(25,this)">+25</button>
+        <button class="bid-step-btn" onclick="setBidStep(50,this)">+50</button>
+        <button class="bid-step-btn" onclick="setBidStep(100,this)">+100</button>
+        <button class="bid-step-btn" onclick="setBidStep(200,this)">+200</button>
+      </div>
+    </div>
+
+    <!-- TEAM BID BUTTONS -->
+    <div class="card">
+      <div class="card-title">🛡️ TEAMS — Click to Bid</div>
+      <div class="bid-controls" id="bidControls">
+        <div class="empty" style="grid-column:1/-1;">No teams yet. Go to Setup!</div>
+      </div>
+    </div>
+
+    <!-- ACTION BUTTONS -->
+    <div class="grid3">
+      <button class="btn btn-green btn-full" onclick="markSold()">✅ SOLD</button>
+      <button class="btn btn-red btn-full" onclick="markUnsold()">❌ UNSOLD</button>
+      <button class="btn btn-outline btn-full" onclick="nextPlayer()">⏭ SKIP</button>
+    </div>
+
+    <!-- REMAINING PLAYERS -->
+    <div class="card">
+      <div class="card-title">📋 REMAINING PLAYERS</div>
+      <div id="remainingPlayers"><div class="empty">No players in queue.</div></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== COIN TOSS PAGE ===== -->
+<div class="page" id="page-cointoss">
+  <div style="max-width:500px;margin:0 auto;">
+    <div class="card">
+      <div class="card-title">🪙 COIN TOSS</div>
+      <div class="coin-section">
+
+        <div style="width:100%;max-width:400px;">
+          <div class="section-label">Which team calls?</div>
+          <div class="toss-teams" id="tossTeamBtns">
+            <div class="toss-team-btn" onclick="chooseTossTeam(this,'Heads')">Heads</div>
+            <div class="toss-team-btn" onclick="chooseTossTeam(this,'Tails')">Tails</div>
+          </div>
+        </div>
+
+        <div class="coin-wrapper">
+          <div class="coin" id="coin">
+            <div class="coin-face coin-heads">H</div>
+            <div class="coin-face coin-tails">T</div>
+          </div>
+        </div>
+
+        <div class="coin-result" id="coinResult"></div>
+
+        <button class="btn btn-gold" style="padding:12px 40px;font-size:16px;" onclick="flipCoin()">🪙 Flip Coin!</button>
+
+        <div class="toss-history" id="tossHistory"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SPIN WHEEL PAGE ===== -->
+<div class="page" id="page-wheel">
+  <div style="max-width:600px;margin:0 auto;">
+    <div class="card">
+      <div class="card-title">🎡 SPIN THE WHEEL</div>
+      <div style="margin-bottom:16px;">
+        <div class="section-label">Wheel items (one per line or from players/teams)</div>
+        <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+          <button class="btn btn-sm btn-outline" onclick="loadWheelFromPlayers()">Load Players</button>
+          <button class="btn btn-sm btn-outline" onclick="loadWheelFromTeams()">Load Teams</button>
+          <button class="btn btn-sm btn-outline" onclick="clearWheel()">Clear</button>
+        </div>
+        <textarea id="wheelItems" rows="4" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(192,132,252,0.2);color:var(--text);padding:10px 14px;border-radius:10px;font-family:'Rajdhani',sans-serif;font-size:14px;outline:none;resize:vertical;" placeholder="Enter items, one per line...&#10;Team A&#10;Team B&#10;Team C"></textarea>
+        <button class="btn btn-purple btn-sm" style="margin-top:8px;" onclick="buildWheel()">🔄 Update Wheel</button>
+      </div>
+      <div class="wheel-section">
+        <div class="wheel-container">
+          <div class="wheel-pointer"></div>
+          <canvas id="wheelCanvas" width="320" height="320"></canvas>
+        </div>
+        <div class="wheel-result" id="wheelResult"></div>
+        <button class="spin-btn" id="spinBtn" onclick="spinWheel()">SPIN!</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============ STATE ============
+let teams = [];
+let players = [];
+let auctionQueue = [];
+let currentPlayerIdx = 0;
+let currentBid = 0;
+let currentLeader = null;
+let bidStep = 10;
+let tossHistory = [];
+let wheelSegments = [];
+let wheelAngle = 0;
+let wheelSpinning = false;
+let wheelRAF = null;
+
+// ============ NAV ============
+function goTo(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  event.target.classList.add('active');
+  if(page === 'teams') renderTeamsPage();
+  if(page === 'auction') renderAuction();
+  if(page === 'wheel') buildWheel();
+  if(page === 'cointoss') renderTossTeams();
+}
+
+// ============ TOAST ============
+function toast(msg, duration=2500) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), duration);
+}
+
+// ============ TEAMS SETUP ============
+function addTeam() {
+  const name = document.getElementById('teamNameInput').value.trim();
+  const pts = parseInt(document.getElementById('teamPointsInput').value) || 1000;
+  if(!name) { toast('⚠️ Enter a team name!'); return; }
+  if(teams.find(t => t.name.toLowerCase() === name.toLowerCase())) { toast('⚠️ Team already exists!'); return; }
+  teams.push({ id: Date.now(), name, points: pts, startPoints: pts, players: [] });
+  document.getElementById('teamNameInput').value = '';
+  renderTeamSetupList();
+  toast('✅ ' + name + ' added!');
+}
+
+function removeTeam(id) {
+  teams = teams.filter(t => t.id !== id);
+  renderTeamSetupList();
+}
+
+function renderTeamSetupList() {
+  const el = document.getElementById('teamListSetup');
+  if(!teams.length) { el.innerHTML = '<div class="empty">No teams yet.</div>'; return; }
+  el.innerHTML = teams.map(t => `
+    <div class="player-item">
+      <span class="pi-name">${t.name}</span>
+      <span style="font-size:13px;color:var(--gold);font-weight:700;">${t.points} pts</span>
+      <button class="btn btn-sm btn-outline" style="color:var(--red);border-color:rgba(248,113,113,0.3);" onclick="removeTeam(${t.id})">✕</button>
+    </div>`).join('');
+}
+
+// ============ PLAYERS SETUP ============
+function addPlayer() {
+  const name = document.getElementById('playerNameInput').value.trim();
+  const role = document.getElementById('playerRoleInput').value;
+  if(!name) { toast('⚠️ Enter a player name!'); return; }
+  if(players.find(p => p.name.toLowerCase() === name.toLowerCase())) { toast('⚠️ Player already exists!'); return; }
+  players.push({ id: Date.now(), name, role, status: 'pending', soldTo: null, soldFor: 0 });
+  document.getElementById('playerNameInput').value = '';
+  renderPlayerList();
+  toast('✅ ' + name + ' added!');
+}
+
+function removePlayer(id) {
+  players = players.filter(p => p.id !== id);
+  renderPlayerList();
+}
+
+function renderPlayerList() {
+  const el = document.getElementById('playerList');
+  if(!players.length) { el.innerHTML = '<div class="empty">No players yet.</div>'; return; }
+  el.innerHTML = `<div class="player-list">${players.map(p => `
+    <div class="player-item">
+      <span class="pi-name">${p.name}</span>
+      <span class="pi-badge ${p.role==='Captain'?'badge-captain':'badge-player'}">${p.role==='Captain'?'⭐ Captain':'Player'}</span>
+      <span class="pi-badge ${p.status==='sold'?'badge-sold':p.status==='unsold'?'badge-unsold':''}">${p.status==='sold'?'SOLD '+p.soldFor+'pts':p.status==='unsold'?'UNSOLD':''}</span>
+      <button class="btn btn-sm btn-outline" style="color:var(--red);border-color:rgba(248,113,113,0.3);" onclick="removePlayer(${p.id})">✕</button>
+    </div>`).join('')}</div>`;
+}
+
+// ============ START AUCTION ============
+function startAuction() {
+  if(!teams.length) { toast('⚠️ Add at least 2 teams first!'); return; }
+  if(!players.length) { toast('⚠️ Add players first!'); return; }
+  auctionQueue = players.filter(p => p.status === 'pending').map(p => ({...p}));
+  currentPlayerIdx = 0;
+  currentBid = 0;
+  currentLeader = null;
+  // switch to auction tab
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-auction').classList.add('active');
+  document.querySelectorAll('.nav-tab')[2].classList.add('active');
+  renderAuction();
+  toast('🎉 Auction started!');
+}
+
+// ============ AUCTION ============
+function renderAuction() {
+  renderBidControls();
+  renderCurrentPlayer();
+  renderRemainingPlayers();
+}
+
+function renderCurrentPlayer() {
+  if(!auctionQueue.length || currentPlayerIdx >= auctionQueue.length) {
+    document.getElementById('auctionPlayerName').textContent = 'All Done!';
+    document.getElementById('auctionPlayerRole').textContent = 'Auction complete';
+    document.getElementById('currentBidVal').textContent = '—';
+    document.getElementById('biddingTeam').textContent = '';
+    return;
+  }
+  const p = auctionQueue[currentPlayerIdx];
+  document.getElementById('auctionPlayerName').textContent = p.name;
+  document.getElementById('auctionPlayerRole').textContent = p.role === 'Captain' ? '⭐ Captain' : 'Player';
+  document.getElementById('currentBidVal').textContent = currentBid;
+  document.getElementById('biddingTeam').textContent = currentLeader ? '🏅 Leading: ' + currentLeader.name : 'No bids yet — start bidding!';
+}
+
+function renderBidControls() {
+  const el = document.getElementById('bidControls');
+  if(!teams.length) { el.innerHTML = '<div class="empty" style="grid-column:1/-1;">No teams. Go to Setup first!</div>'; return; }
+  el.style.gridTemplateColumns = teams.length <= 2 ? '1fr 1fr' : teams.length === 3 ? '1fr 1fr 1fr' : 'repeat(auto-fill,minmax(160px,1fr))';
+  el.innerHTML = teams.map(t => `
+    <div class="team-bid-btn ${currentLeader && currentLeader.id===t.id?'leading':''}" onclick="placeBid(${t.id})" id="tbb-${t.id}">
+      <div class="tbb-name">${t.name}</div>
+      <div class="tbb-pts">Points: <span>${t.points}</span></div>
+      <div class="tbb-bid">BID +${bidStep}</div>
+    </div>`).join('');
+}
+
+function placeBid(teamId) {
+  if(!auctionQueue.length || currentPlayerIdx >= auctionQueue.length) { toast('⚠️ No active player!'); return; }
+  const team = teams.find(t => t.id === teamId);
+  if(!team) return;
+  const newBid = currentBid + bidStep;
+  if(team.points < newBid) { toast('⚠️ ' + team.name + ' has insufficient points!'); return; }
+  currentBid = newBid;
+  currentLeader = team;
+  renderCurrentPlayer();
+  renderBidControls();
+}
+
+function setBidStep(val, btn) {
+  bidStep = val;
+  document.querySelectorAll('.bid-step-btn').forEach(b => b.classList.remove('active-step'));
+  btn.classList.add('active-step');
+  renderBidControls();
+}
+
+function markSold() {
+  if(!currentLeader) { toast('⚠️ No bid placed yet!'); return; }
+  if(currentPlayerIdx >= auctionQueue.length) return;
+  const player = auctionQueue[currentPlayerIdx];
+  currentLeader.points -= currentBid;
+  currentLeader.players.push({ name: player.name, role: player.role, pts: currentBid });
+  const orig = players.find(p => p.id === player.id);
+  if(orig) { orig.status = 'sold'; orig.soldTo = currentLeader.name; orig.soldFor = currentBid; }
+  document.getElementById('soldPlayerName').textContent = player.name;
+  document.getElementById('soldTeamName').textContent = currentLeader.name;
+  document.getElementById('soldPoints').textContent = currentBid;
+  document.getElementById('soldOverlay').classList.add('show');
+  renderPlayerList();
+}
+
+function closeSold() {
+  document.getElementById('soldOverlay').classList.remove('show');
+  nextPlayer();
+}
+
+function markUnsold() {
+  if(currentPlayerIdx >= auctionQueue.length) return;
+  const player = auctionQueue[currentPlayerIdx];
+  const orig = players.find(p => p.id === player.id);
+  if(orig) orig.status = 'unsold';
+  toast('❌ ' + player.name + ' marked UNSOLD');
+  renderPlayerList();
+  nextPlayer();
+}
+
+function nextPlayer() {
+  currentPlayerIdx++;
+  currentBid = 0;
+  currentLeader = null;
+  renderAuction();
+  if(currentPlayerIdx >= auctionQueue.length) toast('🏁 Auction complete! Check Teams tab.');
+}
+
+function renderRemainingPlayers() {
+  const el = document.getElementById('remainingPlayers');
+  const remaining = auctionQueue.slice(currentPlayerIdx + 1);
+  if(!remaining.length) { el.innerHTML = '<div class="empty">No more players in queue.</div>'; return; }
+  el.innerHTML = `<div class="player-list">${remaining.map(p => `
+    <div class="player-item">
+      <span class="pi-name">${p.name}</span>
+      <span class="pi-badge ${p.role==='Captain'?'badge-captain':'badge-player'}">${p.role==='Captain'?'⭐ Captain':'Player'}</span>
+    </div>`).join('')}</div>`;
+}
+
+// ============ TEAMS PAGE ============
+function renderTeamsPage() {
+  const el = document.getElementById('teamsGrid');
+  if(!teams.length) { el.innerHTML = '<div class="empty">No teams created yet.</div>'; return; }
+  el.innerHTML = teams.map(t => `
+    <div class="team-card">
+      <div class="team-name-display">${t.name}</div>
+      <div class="team-points">Points: <span>${t.points}</span> / ${t.startPoints}</div>
+      <hr class="divider"/>
+      <div style="font-size:12px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">Players (${t.players.length})</div>
+      <div class="team-players-list">
+        ${t.players.length ? t.players.map(p => `
+          <div class="tp-row">
+            <div class="tp-icon ${p.role==='Captain'?'captain':''}"></div>
+            <span style="flex:1;">${p.name}</span>
+            <span style="font-size:12px;color:var(--muted);">${p.pts}pts</span>
+            ${p.role==='Captain'?'<span style="font-size:10px;color:var(--gold);">⭐</span>':''}
+          </div>`).join('') : '<div style="font-size:13px;color:var(--muted);">No players yet</div>'}
+      </div>
+    </div>`).join('');
+}
+
+function resetAuction() {
+  if(!confirm('Reset all auction progress? Teams keep their names but lose players & points reset.')) return;
+  teams.forEach(t => { t.points = t.startPoints; t.players = []; });
+  players.forEach(p => { p.status = 'pending'; p.soldTo = null; p.soldFor = 0; });
+  auctionQueue = [];
+  currentPlayerIdx = 0;
+  currentBid = 0;
+  currentLeader = null;
+  renderTeamsPage();
+  renderPlayerList();
+  toast('🔄 Auction reset!');
+}
+
+// ============ COIN TOSS ============
+let chosenSide = null;
+function renderTossTeams() {
+  const el = document.getElementById('tossTeamBtns');
+  el.innerHTML = `
+    <div class="toss-team-btn ${chosenSide==='Heads'?'chosen':''}" onclick="chooseTossTeam(this,'Heads')">HEADS</div>
+    <div class="toss-team-btn ${chosenSide==='Tails'?'chosen':''}" onclick="chooseTossTeam(this,'Tails')">TAILS</div>`;
+}
+
+function chooseTossTeam(btn, side) {
+  chosenSide = side;
+  document.querySelectorAll('.toss-team-btn').forEach(b => b.classList.remove('chosen'));
+  btn.classList.add('chosen');
+}
+
+function flipCoin() {
+  const coin = document.getElementById('coin');
+  const resultEl = document.getElementById('coinResult');
+  coin.className = 'coin';
+  resultEl.textContent = '';
+  resultEl.className = 'coin-result';
+  void coin.offsetWidth;
+  const result = Math.random() < 0.5 ? 'Heads' : 'Tails';
+  setTimeout(() => {
+    coin.classList.add('flipping');
+    setTimeout(() => {
+      coin.className = 'coin ' + (result === 'Heads' ? 'heads-result' : 'tails-result');
+      resultEl.textContent = result === 'Heads' ? '👑 HEADS!' : '🌙 TAILS!';
+      resultEl.className = 'coin-result ' + result.toLowerCase();
+      const won = chosenSide === result;
+      const chosenLabel = chosenSide ? (chosenSide + ' — ' + (won ? '🎉 WON!' : '😔 Lost!')) : '';
+      tossHistory.unshift({ result, chosen: chosenSide, won });
+      if(tossHistory.length > 5) tossHistory.pop();
+      renderTossHistory();
+      if(chosenLabel) toast(chosenLabel);
+    }, 1400);
+  }, 50);
+}
+
+function renderTossHistory() {
+  const el = document.getElementById('tossHistory');
+  if(!tossHistory.length) { el.innerHTML = ''; return; }
+  el.innerHTML = `<div style="font-size:12px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">History</div>` +
+    tossHistory.map(h => `
+      <div class="toss-hist-item">
+        <span>${h.result === 'Heads' ? '👑 Heads' : '🌙 Tails'}</span>
+        ${h.chosen ? `<span style="color:${h.won?'var(--green)':'var(--red)'};">${h.chosen} → ${h.won?'Won':'Lost'}</span>` : ''}
+      </div>`).join('');
+}
+
+// ============ SPIN WHEEL ============
+const WHEEL_COLORS = ['#c084fc','#f472b6','#60a5fa','#4ade80','#fbbf24','#f87171','#a78bfa','#34d399','#fb923c','#38bdf8'];
+
+function getWheelItems() {
+  return document.getElementById('wheelItems').value.split('\n').map(s=>s.trim()).filter(Boolean);
+}
+
+function loadWheelFromPlayers() {
+  const names = players.map(p => p.name);
+  document.getElementById('wheelItems').value = names.join('\n');
+  buildWheel();
+}
+
+function loadWheelFromTeams() {
+  const names = teams.map(t => t.name);
+  document.getElementById('wheelItems').value = names.join('\n');
+  buildWheel();
+}
+
+function clearWheel() {
+  document.getElementById('wheelItems').value = '';
+  buildWheel();
+}
+
+function buildWheel() {
+  const items = getWheelItems();
+  wheelSegments = items.length ? items : ['Add items above!'];
+  drawWheel(wheelAngle);
+}
+
+function drawWheel(angle) {
+  const canvas = document.getElementById('wheelCanvas');
+  const ctx = canvas.getContext('2d');
+  const cx = 160, cy = 160, r = 148;
+  const n = wheelSegments.length;
+  const arc = (2 * Math.PI) / n;
+  ctx.clearRect(0, 0, 320, 320);
+  // outer ring
+  ctx.beginPath();
+  ctx.arc(cx, cy, r + 6, 0, 2*Math.PI);
+  ctx.strokeStyle = 'rgba(192,132,252,0.3)';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+  wheelSegments.forEach((seg, i) => {
+    const start = angle + i * arc;
+    const end = start + arc;
+    // slice
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, start, end);
+    ctx.closePath();
+    ctx.fillStyle = WHEEL_COLORS[i % WHEEL_COLORS.length];
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(13,10,26,0.6)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    // text
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(start + arc / 2);
+    ctx.textAlign = 'right';
+    ctx.fillStyle = '#0d0a1a';
+    ctx.font = `bold ${Math.min(16, Math.max(10, 200/n))}px Rajdhani, sans-serif`;
+    ctx.shadowColor = 'rgba(0,0,0,0.3)';
+    ctx.shadowBlur = 2;
+    const maxLen = 12;
+    const label = seg.length > maxLen ? seg.substring(0, maxLen) + '…' : seg;
+    ctx.fillText(label, r - 12, 5);
+    ctx.restore();
+  });
+  // center circle
+  ctx.beginPath();
+  ctx.arc(cx, cy, 22, 0, 2*Math.PI);
+  ctx.fillStyle = '#1e1535';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(192,132,252,0.5)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+}
+
+function spinWheel() {
+  if(wheelSpinning) return;
+  const items = getWheelItems();
+  if(!items.length) { toast('⚠️ Add items to the wheel first!'); return; }
+  buildWheel();
+  wheelSpinning = true;
+  document.getElementById('spinBtn').disabled = true;
+  document.getElementById('wheelResult').textContent = '';
+  const totalSpins = (Math.floor(Math.random()*5)+8) * 2 * Math.PI;
+  const extraAngle = Math.random() * 2 * Math.PI;
+  const totalAngle = totalSpins + extraAngle;
+  const duration = 4000 + Math.random()*1500;
+  const start = performance.now();
+  const startAngle = wheelAngle;
+  function ease(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+  function frame(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = ease(progress);
+    wheelAngle = startAngle + totalAngle * eased;
+    drawWheel(wheelAngle);
+    if(progress < 1) {
+      wheelRAF = requestAnimationFrame(frame);
+    } else {
+      wheelAngle = wheelAngle % (2 * Math.PI);
+      wheelSpinning = false;
+      document.getElementById('spinBtn').disabled = false;
+      // find winner
+      const n = wheelSegments.length;
+      const arc = (2 * Math.PI) / n;
+      const pointer = ((-wheelAngle % (2*Math.PI)) + 2*Math.PI) % (2*Math.PI);
+      const idx = Math.floor(pointer / arc) % n;
+      const winner = wheelSegments[idx];
+      document.getElementById('wheelResult').textContent = '🎉 ' + winner + '!';
+      toast('🎡 Result: ' + winner, 3000);
+    }
+  }
+  wheelRAF = requestAnimationFrame(frame);
+}
+
+// ============ INIT ============
+buildWheel();
+</script>
+</body>
+</html>
